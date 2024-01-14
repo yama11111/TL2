@@ -1,13 +1,32 @@
 #include <cstdio>
 #include <cstdlib>
+#include <windows.h>
+#include <cassert>
+#include "TextureConverter.h"
+
+enum Argument
+{
+	kApplicationPath,	 // アプリケーションパス
+	kFilePath,			 // ファイルパス
+
+	NumArgument,
+};
 
 int main(int argc, char* argv[])
 {
-	for (size_t i = 0; i < argc; i++)
-	{
-		printf(argv[i]);
-		printf("\n");
-	}
+	assert(NumArgument <= argc);
+
+	// COMライブラリ初期化
+	HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+	assert(SUCCEEDED(hr));
+
+	YGame::TextureConverter converter;
+
+	// テクスチャ変換
+	converter.ConvertTextureWICToDDS(argv[kFilePath]);
+
+	// COMライブラリ終了
+	CoUninitialize();
 
 	system("pause");
 
