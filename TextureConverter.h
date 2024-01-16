@@ -64,7 +64,7 @@ namespace YGame
 		/// DDSテクスチャとしてファイル書き出し
 		/// </summary>
 		/// <param name="texData"> : 画像データ</param>
-		static void SaveDDSTextureToFile(const TextureData& texData);
+		static void SaveDDSTextureToFile(TextureData& texData);
 
 	};
 }

@@ -102,18 +102,47 @@ void TextureConverter::SeparateFilePath(
 	fileName = exceptExt;
 }
 
-void TextureConverter::SaveDDSTextureToFile(const TextureData& texData)
+void TextureConverter::SaveDDSTextureToFile(TextureData& texData)
 {
-	DirectX::TexMetadata metadata = texData.metadata;
-	metadata.format = MakeSRGB(metadata.format);
+	HRESULT hr;
+	
+	// ミップマップ生成
+	ScratchImage mipChain;
+	hr = GenerateMipMaps(
+		texData.scratchImg.GetImages(), texData.scratchImg.GetImageCount(), 
+		texData.scratchImg.GetMetadata(), TEX_FILTER_DEFAULT, 0, mipChain);
+	if(SUCCEEDED(hr))
+	{
+		// 置き換え
+		texData.scratchImg = std::move(mipChain);
+		texData.metadata = texData.scratchImg.GetMetadata();
+	}
 
+	// 圧縮形式に変換
+	ScratchImage converted;
+	hr = Compress(
+		texData.scratchImg.GetImages(), texData.scratchImg.GetImageCount(), 
+		texData.metadata, DXGI_FORMAT_BC7_UNORM_SRGB, 
+		TEX_COMPRESS_BC7_QUICK | TEX_COMPRESS_SRGB | TEX_COMPRESS_PARALLEL, 
+		1.0f, converted);
+	if (SUCCEEDED(hr))
+	{
+		// 置き換え
+		texData.scratchImg = std::move(converted);
+		texData.metadata = texData.scratchImg.GetMetadata();
+	}
+
+	// フォーマット変更
+	texData.metadata.format = MakeSRGB(texData.metadata.format);
+
+	// 拡張子変更
 	std::wstring filePath = 
 		ConvertMultiByteStringToWideString(
 			texData.directoryPath + texData.fileName + ".dds");
 
-	HRESULT hr = SaveToDDSFile(
+	hr = SaveToDDSFile(
 		texData.scratchImg.GetImages(), texData.scratchImg.GetImageCount(),
-		metadata, DDS_FLAGS_NONE, filePath.c_str());
+		texData.metadata, DDS_FLAGS_NONE, filePath.c_str());
 	assert(SUCCEEDED(hr));
 }
 
