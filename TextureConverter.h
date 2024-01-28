@@ -13,7 +13,14 @@ namespace YGame
 		/// WIC → DDS変換
 		/// </summary>
 		/// <param name="filePath"> : ファイルパス</param>
-		static void ConvertTextureWICToDDS(const std::string& filePath);
+		/// <param name="numOptions"> : オプションの数</param>
+		/// <param name="options"> : オプション配列</param>
+		static void ConvertTextureWICToDDS(const std::string& filePath, const int numOptions = 0, char* options[] = nullptr);
+
+		/// <summary>
+		/// 使用方法を表示
+		/// </summary>
+		static void OutputUsage();
 
 	private:
 
@@ -64,7 +71,7 @@ namespace YGame
 		/// DDSテクスチャとしてファイル書き出し
 		/// </summary>
 		/// <param name="texData"> : 画像データ</param>
-		static void SaveDDSTextureToFile(TextureData& texData);
+		static void SaveDDSTextureToFile(TextureData& texData, const int numOptions, char* options[]);
 
 	};
 }

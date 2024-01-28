@@ -136,11 +136,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureConverter.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureConverter.h" />
   </ItemGroup>
   <ItemGroup>
