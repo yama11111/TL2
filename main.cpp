@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
 	// COMƒ‰ƒCƒuƒ‰ƒŠI—¹
 	CoUninitialize();
 
-	system("pause");
+	//system("pause");
 
 	return 0;
 }
